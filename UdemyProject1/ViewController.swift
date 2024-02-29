@@ -10,10 +10,11 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
-    var cities: [String: String] = ["Belgrade": "Serbia", "Amsterdam": "Netherlands", "Budapest": "Hungary", "Paris": "France", "Minhen": "Germany", "Bejing": "China", "Moscow": "Russia"]
+    private var cities: [String: String] = ["Belgrade": "Serbia", "Amsterdam": "Netherlands", "Budapest": "Hungary", "Paris": "France", "Minhen": "Germany", "Bejing": "China", "Moscow": "Russia"]
     
-    var cityNames: [String] = []
-    let cellIdentifier = "cell"
+    private var cityNames: [String] = []
+    private let cellIdentifier = "cell"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         cityNames = Array(cities.keys)
@@ -29,7 +30,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         var cellContentConfiguration = cell.defaultContentConfiguration()
         let cityName = cityNames[indexPath.row]
         cellContentConfiguration.text = cityName
@@ -42,6 +43,19 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         let cityName = cityNames[indexPath.row]
         print("City: \(cityName)\t Country: \(cities[cityName] ?? "")")
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let isEven = indexPath.row % 2 == .zero
+        let viewController = UIViewController()
+        
+        if indexPath.row == cities.count - 1 {
+            performSegue(withIdentifier: "cityDetails", sender: self)
+        } else if isEven {
+            viewController.view.backgroundColor = .blue
+            present(viewController, animated: true)
+        } else if !isEven {
+            viewController.view.backgroundColor = .green
+            navigationController?.pushViewController(viewController, animated: true)
+        }
     }
     
 }
